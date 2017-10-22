@@ -1,0 +1,29 @@
+Race Condition Describe with your own words: What is a race condition?
+Multible threads running parallel try to change data at the same time and because of bad sheduler timing they write over each other, so it becomes a race for who changes it first/last
+
+Disabling Interrupts
+
+Why is it impossible to achieve Mutual Exclusion via disabling interrupts on a multi-core machine?
+Because if 1 cpu has disabled interrupts, the second cpu still sends interrupts to the sheduler and sheduling goes on as normal.
+If both cpus disable interrupts at the same time, they again have a race condition and could freeze the pc if both run while(true).
+
+Why is it dangerous to give user processes the power to disable interrupts?
+If it runs while(true) it freezes the pc.
+
+Peterson's Solution
+Play through the two scenarios of the handout of Peterson's solution. Document how it works.
+1)At first process 0 is the loser, but nobody else is interested so he can jump over the loop.
+  Then process 1 is the loser, but someone is already intersested so he has to wait in the loop.
+  When process 0 leaves the region, nobody is interested anymore and process 1 con go into the region.
+2)Both processes race to set loser and whoever gets there first can go right through, the other has to wait.
+  Loser saves who got there last, so even if the process that got there last is the first to the loop, it still has to wait for the first process to finish.
+
+Play through the scenario which makes the strict alternation approach fail. Document how it fails.
+There always have to be two threads at a time for it to work. For examle: a printer could only print once, then it would need another thread to reset the shared variable
+
+What is the meaning of the variable loser in Peterson's solution? When does it have any effect?
+Loser is who was slower in the race to setting the variable loser and has to wait for the other process to finish if both want to do something.
+When both processes want to do something, the loser has to wait till the other process finishes.
+
+Extend the given functions such they can handle three processes.
+Make the interested array bigger, not one loser but assigned numbers(or maybe a list?). The process has to wait untill the process with number-1 (or one node before it in a list) is finished
